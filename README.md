@@ -353,6 +353,11 @@ Agora é só acessar o endereço http://localhost:8081 no navegador (cuide para 
 <img width="1914" height="890" alt="image" src="https://github.com/user-attachments/assets/7f29d87e-eb58-4c4b-a9fc-96913614c71b" />
 
 
+Na interface web do ArgoCD (http://localhost:8080), também é possível ver informações sobre a aplicação:
+
+
+<img width="1917" height="887" alt="image" src="https://github.com/user-attachments/assets/3b386c1c-610a-40a1-bfd2-30c97eb09835" />
+
 
 
 
