@@ -238,4 +238,122 @@ Password:
 Context 'localhost:8080' updated
 ```
 
-## Etapa 5: Criar o App no ArgoCD
+## Etapa 5: Criação e Sincronização do Aplicativo (CLI)
+
+### 5.1. Criando a Aplicação
+
+Execute o seguinte comando no seu terminal, substituindo SEU_USUARIO/SEU_REPO pelo nome de usuário e repositório corretos (ex: StefaniRitter/GitOps-Microservices):
+```
+argocd app create online-boutique --repo https://github.com/StefaniRitter/GitOps-Microservices.git --path k8s --dest-server https://kubernetes.default.svc --dest-namespace online-boutique --sync-policy automated --auto-prune --self-heal --upsert --sync-option CreateNamespace=true
+```
+
+* `argocd app create online-boutique`: 	Cria o objeto Application com o nome online-boutique no ArgoCD.
+* `--repo <URL>`: Informa ao ArgoCD qual repositório Git deve ser monitorado.
+* `--path k8s`: Especifica a subpasta k8s dentro do repositório onde o ArgoCD encontrará os manifestos YAML (o arquivo online.boutique.yaml) para implantação.
+* `--dest-server https://kubernetes.default.svc`: Define o endereço do cluster onde os recursos serão aplicados. Nesse caso, foi informado o endereço padrão do cluster onde o próprio ArgoCD está rodando (in-cluster).
+* `--dest-namespace online-boutique`: Especifica o Namespace no cluster onde os microserviços devem ser criados (o ArgoCD o criará se não existir).
+* `--sync-policy automated`: Define que a sincronização entre o estado do Git e o estado do Cluster deve ser acionada automaticamente sempre que o ArgoCD detectar uma mudança no repositório.
+* `--auto-prune`: Permite que o ArgoCD exclua recursos do Kubernetes que foram removidos do repositório Git. Isso mantém o cluster limpo e sincronizado com o Git.
+* `--self-heal`: Se um recurso no cluster for alterado manualmente (desviando-se do estado do Git), o ArgoCD irá restaurá-lo automaticamente para o estado definido no Git, garantindo que o Git seja sempre a autoridade.
+* `--upsert`: Permite que se execute este comando várias vezes para criar a aplicação (se não existir) ou para atualizar sua configuração (se ela já existir), sem causar erros.
+* `--sync-option CreateNamespace=true`: Força o ArgoCD a criar o Namespace de destino (online-boutique) antes de tentar implantar qualquer recurso.
+
+A saída deve ser:
+```
+application 'online-boutique' created
+```
+
+### 5.2: Verificação
+
+O  aplicativo deve começar a sincronizar automaticamente. Para verificar o deploy e a saúde dos microserviços, execute o seguinte comando:
+```
+argocd app get online-boutique --refresh
+```
+
+A saída deve ser algo assim:
+```
+Name:               argocd/online-boutique
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          online-boutique
+URL:                https://localhost:8080/applications/online-boutique
+Source:
+- Repo:             https://github.com/StefaniRitter/GitOps-Microservices.git
+  Target:
+  Path:             k8s
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to  (2152f8d)
+Health Status:      Progressing
+
+GROUP  KIND            NAMESPACE        NAME                   STATUS   HEALTH       HOOK  MESSAGE
+       Namespace                        online-boutique        Running  Synced             namespace/online-boutique created
+       ServiceAccount  online-boutique  adservice              Synced                      serviceaccount/adservice created
+       ServiceAccount  online-boutique  emailservice           Synced                      serviceaccount/emailservice created
+       ServiceAccount  online-boutique  shippingservice        Synced                      serviceaccount/shippingservice created
+       ServiceAccount  online-boutique  frontend               Synced                      serviceaccount/frontend created
+       ServiceAccount  online-boutique  recommendationservice  Synced                      serviceaccount/recommendationservice created
+       ServiceAccount  online-boutique  loadgenerator          Synced                      serviceaccount/loadgenerator created
+       ServiceAccount  online-boutique  checkoutservice        Synced                      serviceaccount/checkoutservice created
+       ServiceAccount  online-boutique  cartservice            Synced                      serviceaccount/cartservice created
+       ServiceAccount  online-boutique  currencyservice        Synced                      serviceaccount/currencyservice created
+       ServiceAccount  online-boutique  paymentservice         Synced                      serviceaccount/paymentservice created
+       ServiceAccount  online-boutique  productcatalogservice  Synced                      serviceaccount/productcatalogservice created
+       Service         online-boutique  redis-cart             Synced   Healthy            service/redis-cart created
+       Service         online-boutique  productcatalogservice  Synced   Healthy            service/productcatalogservice created
+       Service         online-boutique  frontend               Synced   Healthy            service/frontend created
+       Service         online-boutique  shippingservice        Synced   Healthy            service/shippingservice created
+       Service         online-boutique  cartservice            Synced   Healthy            service/cartservice created
+       Service         online-boutique  frontend-external      Synced   Progressing        service/frontend-external created
+       Service         online-boutique  checkoutservice        Synced   Healthy            service/checkoutservice created
+       Service         online-boutique  adservice              Synced   Healthy            service/adservice created
+       Service         online-boutique  currencyservice        Synced   Healthy            service/currencyservice created
+       Service         online-boutique  recommendationservice  Synced   Healthy            service/recommendationservice created
+       Service         online-boutique  emailservice           Synced   Healthy            service/emailservice created
+       Service         online-boutique  paymentservice         Synced   Healthy            service/paymentservice created
+apps   Deployment      online-boutique  redis-cart             Synced   Healthy            deployment.apps/redis-cart created
+apps   Deployment      online-boutique  currencyservice        Synced   Healthy            deployment.apps/currencyservice created
+apps   Deployment      online-boutique  emailservice           Synced   Healthy            deployment.apps/emailservice created
+apps   Deployment      online-boutique  checkoutservice        Synced   Healthy            deployment.apps/checkoutservice created
+apps   Deployment      online-boutique  adservice              Synced   Healthy            deployment.apps/adservice created
+apps   Deployment      online-boutique  loadgenerator          Synced   Healthy            deployment.apps/loadgenerator created
+apps   Deployment      online-boutique  frontend               Synced   Healthy            deployment.apps/frontend created
+apps   Deployment      online-boutique  shippingservice        Synced   Healthy            deployment.apps/shippingservice created
+apps   Deployment      online-boutique  cartservice            Synced   Healthy            deployment.apps/cartservice created
+apps   Deployment      online-boutique  paymentservice         Synced   Healthy            deployment.apps/paymentservice created
+apps   Deployment      online-boutique  productcatalogservice  Synced   Healthy            deployment.apps/productcatalogservice created
+apps   Deployment      online-boutique  recommendationservice  Synced   Healthy            deployment.apps/recommendationservice created
+```
+
+Pode demorar um pouco até que `Sync Status` mostre `Synced` e o `Health Status` mostre `Healthy`.
+
+## Etapa 6: Expondo a aplicação
+
+Assim que o App estiver saudável, é necessário realizar um port-forward em um novo terminal para acessar a loja no navegador:
+Para isso, rode o comando abaixo:
+```
+kubectl port-forward svc/frontend-external -n online-boutique 8081:80
+```
+
+Saída esperada:
+```
+Forwarding from 127.0.0.1:8081 -> 8080
+Forwarding from [::1]:8081 -> 8080
+Handling connection for 8081
+Handling connection for 8081
+Handling connection for 8081
+Handling connection for 8081
+Handling connection for 8081...
+```
+
+## Etapa 7: Acessar a aplicação
+
+Agora é só acessar o endereço http://localhost:8081 no navegador (cuide para não escrever "https"!)  e ver a aplicação funcionando:
+
+<img width="1914" height="890" alt="image" src="https://github.com/user-attachments/assets/7f29d87e-eb58-4c4b-a9fc-96913614c71b" />
+
+
+
+
+
+
