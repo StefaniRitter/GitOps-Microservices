@@ -215,11 +215,11 @@ Com o Port Forwarding ativo (mantenha o primeiro terminal aberto), existem duas 
 * Ignorar Certificado: Você receberá um aviso de segurança. Ignore-o (prossiga para a página) para acessar a UI.
 * Fazer Login: Informe o usuário admin e a senha que você copiou na etapa anterior.
 
-<img width="377" height="487" alt="image" src="https://github.com/user-attachments/assets/b8d747e0-1215-464b-9f68-43b403654f20" />
+![Interface do ArgoCD na etapa de login](imgs/ui-login.png)
 
 E pronto! O ArgoCD está configurado e a interface deve aparecer:
 
-<img width="1908" height="892" alt="image" src="https://github.com/user-attachments/assets/ba6bccef-39b0-406d-bf6d-8cf94d904f51" />
+![Interface do ArgoCD na página inicial](imgs/interface.png)
 
  
 2. Acesso via Terminal (CLI)
