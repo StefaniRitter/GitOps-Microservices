@@ -194,9 +194,7 @@ IMPORTANTE: É necessário manter o terminal **aberto**, pois o port-forward é 
 
 Nesse momento, já é possível ver o ArgoCD rodando no navegador através do endereço `https://localhost:8080`:
 
-
-<img width="1916" height="886" alt="image" src="https://github.com/user-attachments/assets/4b7722b9-b20d-4ccc-929e-53f00305371d" />
-
+![Interface do ArgoCD antes do login](imgs/img-login.png)
 
 ### Etapa 4.2: Obtendo a Senha Inicial
 
