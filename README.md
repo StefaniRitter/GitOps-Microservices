@@ -481,6 +481,7 @@ Resultado:
 
 <img width="1122" height="174" alt="image" src="https://github.com/user-attachments/assets/94fa6559-9650-4884-9196-0df45cca26c5" />
 
+
 4. Verificar se o ArgoCD detectou e aplicou as alterações feitas automaticamente:
 
 No terminal, execute o seguinte comando: 
