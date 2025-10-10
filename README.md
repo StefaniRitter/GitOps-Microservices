@@ -360,6 +360,130 @@ Na interface web do ArgoCD (http://localhost:8080), também é possível ver inf
 <img width="1917" height="887" alt="image" src="https://github.com/user-attachments/assets/3b386c1c-610a-40a1-bfd2-30c97eb09835" />
 
 
+## Desafio Bônus: Mudar o número de réplicas de algum microsserviço
+
+1. Abrir o arquivo online.boutique.yaml no Visual Studio Code (ou outro editor de texto).
+
+2. Alterar o número de réplicas de um microsserviço. Nesse caso, o aumento nas réplicas foi no serviço `loadgenerator`, que aumentou de 1 réplica para 3 réplicas. O resultado ficou assim:
+
+```
+   apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadgenerator
+  labels:
+    app: loadgenerator
+spec:
+  selector:
+    matchLabels:
+      app: loadgenerator
+  #LINHA ALTERADA:
+  replicas: 3 
+  template:
+    metadata:
+      labels:
+        app: loadgenerator
+      annotations:
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+    spec:
+      serviceAccountName: loadgenerator
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      initContainers:
+      - command:
+        - /bin/sh
+        - -exc
+        - |
+          MAX_RETRIES=12
+          RETRY_INTERVAL=10
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i: Pinging frontend: ${FRONTEND_ADDR}..."
+            STATUSCODE=$(wget --server-response http://${FRONTEND_ADDR} 2>&1 | awk '/^  HTTP/{print $2}')
+            if [ $STATUSCODE -eq 200 ]; then
+                echo "Frontend is reachable."
+                exit 0
+            fi
+            echo "Error: Could not reach frontend - Status code: ${STATUSCODE}"
+            sleep $RETRY_INTERVAL
+          done
+          echo "Failed to reach frontend after $MAX_RETRIES attempts."
+          exit 1
+        name: frontend-check
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: busybox:latest
+        env:
+        - name: FRONTEND_ADDR
+          value: "frontend:80"
+      containers:
+      - name: main
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/loadgenerator:v0.10.3
+        env:
+        - name: FRONTEND_ADDR
+          value: "frontend:80"
+        - name: USERS
+          value: "10"
+        - name: RATE
+          value: "1"
+        resources:
+          requests:
+            cpu: 300m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+```
+
+
+3. Adicionar os arquivos modificados no repositório local e subir para o repositório remoto:
+   
+No GitBash, foram usados os seguintes comandos:
+
+Baixar as alterações do repositório remoto para o repositório local:
+```
+git pull
+```
+
+Prepara todos os arquivos modificados no diretório local para serem incluidos no próximo commit:
+```
+git add .
+```
+
+Realiza o commit das mudanças:
+```
+git commit -m "Aumentando número de replicas"
+```
+
+Envia o commit para o repositório remoto:
+```
+git push -u origin main
+```
+
+
+
+
+
+
+
+
+
 
 
 
