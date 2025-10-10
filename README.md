@@ -8,6 +8,7 @@ Automatizar a implantação de um conjunto de microserviços (Online Boutique) e
 
 * Rancher Desktop com Kubernetes habilitado e dockerd(moby) como Container Engine;
 * Kubectl configurado e apontando para o cluster do Rancher Desktop;
+* CLI do ArgoCD para criar, configurar e monitorar o aplicativo GitOps.
 * ArgoCD instalado no cluster;
 * Conta no GitHub com repositório público;
 * Git instalado;
