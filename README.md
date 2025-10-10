@@ -350,13 +350,13 @@ Handling connection for 8081...
 
 Pronto! Agora é só acessar http://localhost:8081 (não pode ser https) no navegador e encher o carrinho!!
 
-<img width="1914" height="890" alt="image" src="https://github.com/user-attachments/assets/7f29d87e-eb58-4c4b-a9fc-96913614c71b" />
+![Interface Online Boutique](imgs/onlineBoutique.png)
 
 
 Na interface web do ArgoCD (http://localhost:8080), também é possível ver informações sobre a aplicação:
 
 
-<img width="1917" height="887" alt="image" src="https://github.com/user-attachments/assets/3b386c1c-610a-40a1-bfd2-30c97eb09835" />
+![Interface do ArgoCD com a aplicação rodando](imgs/interface-app.png)
 
 
 ## Desafio Bônus: Mudar o número de réplicas de algum microsserviço
@@ -477,7 +477,7 @@ git push -u origin main
 
 Resultado:
 
-<img width="1122" height="174" alt="image" src="https://github.com/user-attachments/assets/94fa6559-9650-4884-9196-0df45cca26c5" />
+![Repositório com commit](imgs/commit.png)
 
 
 4. Verificar se o ArgoCD detectou e aplicou as alterações feitas automaticamente:
