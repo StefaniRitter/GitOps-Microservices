@@ -127,7 +127,7 @@ argocd-repo-server-68f8c484db-g8mpz                1/1     Running   0          
 argocd-server-5cc7485d86-2rkgj                     1/1     Running   0          39s
 ```
 
-## Etapa 3: Instalação da CLI do ArgoCD (opcional)
+## Etapa 3: Instalação da CLI do ArgoCD (será usada nas próximas etapas)
 
 ### Etapa 3.1: Instalação do executável
 A CLI (Interface de Linha de Comando) permite interagir com o servidor ArgoCD. O comando abaixo utiliza o PowerShell (Invoke-WebRequest) para baixar o binário correto para o Windows.
@@ -188,7 +188,8 @@ Execute este comando no terminal:
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 O comando acima encaminha o tráfego da porta 443 do serviço (svc) chamado `argocd-server` no Namespace `argocd` para a porta 8080 no localhost.
-É necessário manter o terminal **aberto**, pois o port-forward é um processo contínuo e deve ficar rodando.
+
+IMPORTANTE: É necessário manter o terminal **aberto**, pois o port-forward é um processo contínuo e deve ficar rodando.
 
 Nesse momento, já é possível ver o ArgoCD rodando no navegador através do endereço `https://localhost:8080`:
 
@@ -205,7 +206,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ```
 Copie e cole a saída, que será sua senha temporária.
 
-### 4.3. Acesso e Login
+### Etapa 4.3. Acesso e Login
 
 Com o Port Forwarding ativo (mantenha o primeiro terminal aberto), existem duas formas de acessar o servidor: pela interface web (UI) e pela CLI.
 
@@ -238,9 +239,9 @@ Password:
 Context 'localhost:8080' updated
 ```
 
-## Etapa 5: Criação e Sincronização do Aplicativo (CLI)
+## Etapa 5: Criação e Sincronização do Aplicativo (via CLI)
 
-### 5.1. Criando a Aplicação
+### Etapa 5.1. Criando a Aplicação
 
 Execute o seguinte comando no seu terminal, substituindo SEU_USUARIO/SEU_REPO pelo nome de usuário e repositório corretos (ex: StefaniRitter/GitOps-Microservices):
 ```
@@ -263,7 +264,7 @@ A saída deve ser:
 application 'online-boutique' created
 ```
 
-### 5.2: Verificação
+### Etapa 5.2: Verificação
 
 O  aplicativo deve começar a sincronizar automaticamente. Para verificar o deploy e a saúde dos microserviços, execute o seguinte comando:
 ```
@@ -348,7 +349,7 @@ Handling connection for 8081...
 
 ## Etapa 7: Acessar a aplicação
 
-Agora é só acessar o endereço http://localhost:8081 no navegador (cuide para não escrever "https"!)  e ver a aplicação funcionando:
+Pronto! Agora é só acessar http://localhost:8081 (não pode ser https) no navegador e encher o carrinho!!
 
 <img width="1914" height="890" alt="image" src="https://github.com/user-attachments/assets/7f29d87e-eb58-4c4b-a9fc-96913614c71b" />
 
