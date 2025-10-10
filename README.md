@@ -476,12 +476,35 @@ Envia o commit para o repositório remoto:
 git push -u origin main
 ```
 
+Resultado:
 
+<img width="1122" height="174" alt="image" src="https://github.com/user-attachments/assets/94fa6559-9650-4884-9196-0df45cca26c5" />
 
+4. Verificar se o ArgoCD detectou e aplicou as alterações feitas automaticamente:
 
+No terminal, execute o seguinte comando: 
+```
+kubectl get deployments -n online-boutique
+```
 
+Saída:
+```
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+adservice               1/1     1            1           45h
+cartservice             1/1     1            1           45h
+checkoutservice         1/1     1            1           45h
+currencyservice         1/1     1            1           45h
+emailservice            1/1     1            1           45h
+frontend                1/1     1            1           45h
+loadgenerator           3/3     3            3           45h
+paymentservice          1/1     1            1           45h
+productcatalogservice   1/1     1            1           45h
+recommendationservice   1/1     1            1           45h
+redis-cart              1/1     1            1           45h
+shippingservice         1/1     1            1           45h
+```
 
-
+O trecho `loadgenerator           3/3     3            3           45h` confirma que o ArgoCD capturou a alteração no Git, a sincronizou automaticamente, e o Kubernetes escalou o Deployment loadgenerator para 3 réplicas. Ou seja, o GitOps está funcionando!
 
 
 
